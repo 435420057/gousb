@@ -45,7 +45,7 @@ type Device struct {
 	claimed map[uint8]int
 }
 
-func newDevice(handle *C.libusb_device_handle, desc *Descriptor) *Device {
+func newDevice(handle *C.libusb_device_handle, desc *Descriptor) (*Device, error) {
 	ifaces := 0
 	d := &Device{
 		handle:         handle,
@@ -55,9 +55,15 @@ func newDevice(handle *C.libusb_device_handle, desc *Descriptor) *Device {
 		ControlTimeout: DefaultControlTimeout,
 		lock:           new(sync.Mutex),
 		claimed:        make(map[uint8]int, ifaces),
+		detached:       make(map[uint8]int),
+	}
+	
+	if err := d.detachKernelDriver(); err != nil {
+		d.Close()
+		return nil, err
 	}
 
-	return d
+	return d, nil
 }
 
 func (d *Device) Reset() error {
@@ -115,6 +121,7 @@ func (d *Device) Close() error {
 	for iface := range d.claimed {
 		C.libusb_release_interface(d.handle, C.int(iface))
 	}
+	d.attachKernelDriver()
 	C.libusb_close(d.handle)
 	d.handle = nil
 	return nil
