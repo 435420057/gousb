@@ -135,7 +135,7 @@ func (c *Context) OpenDeviceWithVidPid(vid, pid int) (*Device, error) {
 	}
 
 	device := newDevice(handle, desc)
-	return device, nil
+	return device, err
 }
 
 func (c *Context) Close() error {
