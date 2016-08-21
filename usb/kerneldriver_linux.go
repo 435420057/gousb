@@ -7,7 +7,6 @@ import "C"
 
 import (
 	"fmt"
-	"unsafe"
 )
 
 // detachKernelDriver detaches any active kernel drivers, if supported by the platform.
