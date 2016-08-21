@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-extern void iso_callback(cptr  *void);
+extern void iso_callback(void* cptr);
 static void print_xfer(struct libusb_transfer *xfer);
 
 void callback(struct libusb_transfer *xfer) {
