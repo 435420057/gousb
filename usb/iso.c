@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
-void print_xfer(struct libusb_transfer *xfer);
+extern void iso_callback(cptr  *void);
+static void print_xfer(struct libusb_transfer *xfer);
 
 void callback(struct libusb_transfer *xfer) {
 	//printf("Callback!\n");
@@ -71,7 +72,7 @@ int extract_data(struct libusb_transfer *xfer, void *raw, int max, unsigned char
 		// Extract first error
 		if (pkt.status == 0 || *status != 0) {
 			continue;
-		}	
+		}
 		*status = pkt.status;
 	}
 	return copied;
