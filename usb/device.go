@@ -43,6 +43,7 @@ type Device struct {
 	// Claimed interfaces
 	lock    *sync.Mutex
 	claimed map[uint8]int
+	detached map[uint8]int
 }
 
 func newDevice(handle *C.libusb_device_handle, desc *Descriptor) (*Device, error) {
